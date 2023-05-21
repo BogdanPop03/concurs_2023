@@ -1,0 +1,5 @@
+nume_fisier_intrare = input("Introduceti numele fisierului de intrare: ")
+nume_fisier_iesire = nume_fisier_intrare[:-5] + '.sol'
+
+print(nume_fisier_intrare)
+print(nume_fisier_iesire)
