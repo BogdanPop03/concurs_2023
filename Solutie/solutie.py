@@ -1,25 +1,29 @@
 import sys
 import os
 import time
-from itertools import combinations
 import random
-import math
+from typing import Union
 
 def getLines(nameOfFile) -> list:
+    # List to include all lines of file
     file_lines: list = []
-
+    
+    # Populating the list of file lines
     with open(f'Subiect concurs de programare\{nameOfFile}', "r", encoding="utf-8") as file_in:
         file_lines.append(file_in.readlines())
 
     return file_lines
 
 
-def getCoordinates(list: list) -> list:    
+def getCoordinates(list: list) -> list:
+    # List of all coordinates in test file 
     coordinates_list = []
     
+    # Index of where the coordinates start and end in the test file
     index_start: int = list.index("NODE_COORD_SECTION\n") + 1
     index_end: int = list.index("GTSP_SET_SECTION:\n")
     
+    # Appending the coordinates in the form of a tuple to the coordinates list
     for index in range(index_start, index_end):
         coords = list[index].strip('\n').split()
         coordinates_list.append(tuple(map(int, coords)))
@@ -28,43 +32,18 @@ def getCoordinates(list: list) -> list:
 
 
 def distanceCalculator(point1: tuple, point2: tuple) -> int:
+    # Putting tuple items in variables representing index of said point, x and y coordinates of said point
     index1, x1, y1 = point1
     index2, x2, y2 = point2
     
-    return int(math.sqrt((x2 - x1)**2 + (y2 - y1)**2) + 0.5)
+    return int(((x2 - x1) ** 2 + (y2 - y1) ** 2) ** (1 / 2) + 0.5)
 
 
-# def nearestNeighbour(points: list, points_to_visit: int):
-#     shortest_path = None
-#     max_int = sys.maxsize
-#     shortest_distance = max_int
-    
-#     combinations_to_visit = combinations(points, points_to_visit - 1)
-    
-#     for comb in combinations_to_visit:
-#         remaing_points = set(points)
-#         remaing_points.remove(comb[0])
-#         current_point = comb[0]
-#         path = [current_point[0]]
-#         total_distance = 0
-            
-#         for index in range(points_to_visit - 2):
-#             nearest_point = min(remaing_points, key=lambda x: distanceCalculator(current_point, x))
-#             total_distance += distanceCalculator(current_point, nearest_point)
-#             current_point = nearest_point
-#             remaing_points.remove(nearest_point)
-#             path.append(current_point[0])
-            
-#         total_distance += distanceCalculator(current_point, points[0])
-        
-#         if total_distance < shortest_distance:
-#             shortest_distance = total_distance
-#             shortest_path = path +[points[0][0]]
-            
-#     return shortest_path, shortest_distance
-
-def nearestNeighbour(points: list, points_to_visit: int):
+def nearestNeighbour(points: list, points_to_visit: int) -> Union[list, int]:
+    # Initialize the path to be empty
     shortest_path = None
+    
+    # Determine a very big integer to compare the distance to
     max_int = sys.maxsize
     shortest_distance = max_int
 
@@ -85,6 +64,7 @@ def nearestNeighbour(points: list, points_to_visit: int):
         path.append(path[0])
 
         # Add distance to return to the starting point
+        # print(distanceCalculator((9, 52, 33), (16, 52, 41))) # Testing distanceCalculator
         total_distance += distanceCalculator(current_point, start_point)
 
         if total_distance < shortest_distance:
@@ -108,33 +88,9 @@ def populateOutputFile(file_name: str, path: list, total_distance: int):
         print(f'{file_name}: done')
     except:
         print(f'{file_name}: error')
+        
 
-
-if __name__ == "__main__":
-    # # Getting the name of the input and output files
-    # input_file: str = input("Introduceți numele fișierului de intrare: ")
-    # output_file: str = input_file[:-5] + '.sol'
-    
-    # # Get each line of the input file
-    # lines = getLines(input_file)[0]
-    
-    # # Getting the dimention and procent values
-    # # dimension: int = int(lines[3][12:-1])
-    # dimension: int = int(lines[3].split(" ")[-1])
-    # procent: int = int(input("Introduceți numarul p: "))
-
-    # # Getting the number of points that need to be tresspassed 
-    # number_of_points: int = int(dimension * procent / 100)
-    
-    # # Getting the coordinates of each point
-    # coordinates_list = getCoordinates(lines)
-
-    # # Getting the list of points travelled and the shortest distance
-    # path, distance = nearestNeighbour(coordinates_list, number_of_points)
-    
-    # # Outputting to the output file
-    # populateOutputFile(output_file, path, distance)
-    
+def iterateThroughAllTestFiles():
     start_time = time.time()
     
     folder_path: str = 'Subiect concurs de programare'
@@ -151,8 +107,9 @@ if __name__ == "__main__":
         # Getting the dimention and procent values
         # dimension: int = int(lines[3][12:-1])
         dimension: int = int(lines[3].split(" ")[-1])
-        # procent: int = int(input("Introduceți numarul p: "))
-        percent: int = random.randint(1, 100)
+        # percent: int = int(input("Introduceți numarul p: "))
+        # percent: int = random.randint(1, 100)
+        percent: int = 100
 
         # Getting the number of points that need to be tresspassed 
         number_of_points: int = int(dimension * percent / 100)
@@ -170,10 +127,49 @@ if __name__ == "__main__":
         
         elapsed_time_for_each_file = end_time_for_each_file - start_time_for_each_file
         
-        print(f'Elapsed time for {input_file} is: {elapsed_time_for_each_file} seconds with a percentage of {percent}% of total points')
+        print(f'Elapsed time for {input_file} is: {elapsed_time_for_each_file} seconds with {percent}% of total points')
 
     end_time = time.time()
     
     elapsed_time = end_time - start_time
     
     print(f'Elapsed time: {elapsed_time} seconds')
+
+
+if __name__ == "__main__":
+    iterate_through_all_test_files: bool = True
+    
+    if iterate_through_all_test_files is True:
+        print("Iterating through all test files.")
+        iterateThroughAllTestFiles()
+    else:
+        start_time = time.time()
+        # Getting the name of the input and output files
+        input_file: str = input("Introduceți numele fișierului de intrare: ")
+        output_file: str = input_file[:-5] + '.sol'
+        
+        # Get each line of the input file
+        lines = getLines(input_file)[0]
+        
+        # Getting the dimention and procent values
+        # dimension: int = int(lines[3][12:-1])
+        dimension: int = int(lines[3].split(" ")[-1])
+        percent: int = int(input("Introduceți numarul p: "))
+
+        # Getting the number of points that need to be tresspassed 
+        number_of_points: int = int(dimension * percent / 100)
+        
+        # Getting the coordinates of each point
+        coordinates_list = getCoordinates(lines)
+
+        # Getting the list of points travelled and the shortest distance
+        path, distance = nearestNeighbour(coordinates_list, number_of_points)
+        
+        # Outputting to the output file
+        populateOutputFile(output_file, path, distance)
+        
+        end_time = time.time()
+        
+        elapsed_time = end_time - start_time
+        
+        print(f'Elapsed time for {input_file} is: {elapsed_time} seconds with {percent}% of total points')
