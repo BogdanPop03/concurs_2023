@@ -108,8 +108,8 @@ def iterateThroughAllTestFiles():
         # dimension: int = int(lines[3][12:-1])
         dimension: int = int(lines[3].split(" ")[-1])
         # percent: int = int(input("Introduceți numarul p: "))
-        # percent: int = random.randint(1, 100)
-        percent: int = 100
+        percent: int = random.randint(1, 100)
+        # percent: int = 100
 
         # Getting the number of points that need to be tresspassed 
         number_of_points: int = int(dimension * percent / 100)
@@ -127,7 +127,7 @@ def iterateThroughAllTestFiles():
         
         elapsed_time_for_each_file = end_time_for_each_file - start_time_for_each_file
         
-        print(f'Elapsed time for {input_file} is: {elapsed_time_for_each_file} seconds with {percent}% of total points')
+        print(f'Elapsed time for {input_file} is: {elapsed_time_for_each_file} seconds with {percent}% of total points ({number_of_points} points)')
 
     end_time = time.time()
     
@@ -137,7 +137,17 @@ def iterateThroughAllTestFiles():
 
 
 if __name__ == "__main__":
-    iterate_through_all_test_files: bool = True
+    iterate: str = input("Do you want to iterate through all the test files? (yes/no): ")
+    
+    iterate_through_all_test_files: bool = False
+    
+    if iterate.lower() == 'yes':
+        iterate_through_all_test_files = True
+    elif iterate.lower() == 'no':
+        iterate_through_all_test_files = False
+    else:
+        print("You introduced an invalid input.")
+    
     
     if iterate_through_all_test_files is True:
         print("Iterating through all test files.")
@@ -172,4 +182,4 @@ if __name__ == "__main__":
         
         elapsed_time = end_time - start_time
         
-        print(f'Elapsed time for {input_file} is: {elapsed_time} seconds with {percent}% of total points')
+        print(f'Elapsed time for {input_file} is: {elapsed_time} seconds with {percent}% of total points ({number_of_points} points)')
